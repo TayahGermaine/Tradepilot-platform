@@ -2,10 +2,11 @@ import { Routes, Route } from 'react-router-dom'
 import Landing from './pages/Landing.jsx'
 import Login from './pages/Login.jsx'
 import BrokerPortal from './pages/BrokerPortal.jsx'
-import Portfolio from './pages/Portfolio.jsx'
-import Wallet from './pages/Wallet.jsx'
-import AIInsights from './pages/AIInsights.jsx'
 import AdminConsole from './pages/AdminConsole.jsx'
+import TerminalPage from './pages/TerminalPage.jsx'
+import MarketsPage from './pages/MarketsPage.jsx'
+import CreateAccount from './pages/CreateAccount.jsx'
+
 
 export default function App() {
   return (
