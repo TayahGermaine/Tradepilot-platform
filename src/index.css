@@ -4,26 +4,18 @@
 
 @layer base {
   * {
-    border-color: #1e2130;
+    @apply border-base-border;
   }
-
   html {
     color-scheme: dark;
   }
-
   body {
-    background-color: #05060a;
-    color: #e2e8f0;
+    @apply bg-base-950 text-slate-200 antialiased;
     font-feature-settings: 'ss01' on;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
-
   ::selection {
-    background-color: rgba(59, 108, 246, 0.3);
-    color: #ffffff;
+    @apply bg-accent/30 text-white;
   }
-
   :focus-visible {
     outline: 2px solid #3b6cf6;
     outline-offset: 2px;
@@ -32,115 +24,31 @@
 
 @layer components {
   .card {
-    background-color: #0d0e15;
-    border: 1px solid #1e2130;
-    border-radius: 0.75rem;
+    @apply bg-base-850 border border-base-border rounded-xl;
   }
-
   .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 0.5rem;
-    background-color: #3b6cf6;
-    color: #ffffff;
-    font-weight: 600;
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
-    transition: background-color 150ms ease, color 150ms ease;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent hover:bg-accent-hover text-white font-semibold px-5 py-2.5 text-sm transition-colors;
   }
-
-  .btn-primary:hover {
-    background-color: #5680f9;
-  }
-
   .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid #22242f;
-    color: #e2e8f0;
-    font-weight: 600;
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
-    transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-base-600 hover:border-slate-400 hover:bg-white/5 text-slate-200 font-semibold px-5 py-2.5 text-sm transition-colors;
   }
-
-  .btn-outline:hover {
-    border-color: #94a3b8;
-    background-color: rgba(255, 255, 255, 0.05);
-    color: #ffffff;
-  }
-
   .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    color: #cbd5e1;
-    font-weight: 500;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    transition: background-color 150ms ease, color 150ms ease;
+    @apply inline-flex items-center justify-center rounded-lg text-slate-300 hover:text-white hover:bg-white/5 font-medium px-3 py-2 text-sm transition-colors;
   }
-
-  .btn-ghost:hover {
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.05);
-  }
-
   .input-field {
-    width: 100%;
-    border-radius: 0.5rem;
-    background-color: #0a0b10;
-    border: 1px solid #22242f;
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
-    color: #f8fafc;
-    outline: none;
-    transition: border-color 150ms ease, box-shadow 150ms ease;
+    @apply w-full rounded-lg bg-base-900 border border-base-600 px-3.5 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-colors;
   }
-
-  .input-field::placeholder {
-    color: #64748b;
-  }
-
-  .input-field:focus {
-    border-color: #3b6cf6;
-    box-shadow: 0 0 0 1px #3b6cf6;
-  }
-
   .label-eyebrow {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: #64748b;
-    text-transform: uppercase;
+    @apply text-xs font-semibold tracking-wider text-slate-500 uppercase;
   }
-
   .stat-card {
-    background-color: #0d0e15;
-    border: 1px solid #1e2130;
-    border-radius: 0.75rem;
-    padding: 1.25rem;
+    @apply card p-5;
   }
-
   .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    border-radius: 9999px;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 600;
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
   }
-
-  .table-row-hover:hover {
-    background-color: rgba(255, 255, 255, 0.03);
-    transition: background-color 150ms ease;
+  .table-row-hover {
+    @apply hover:bg-white/[0.03] transition-colors;
   }
 }
 
@@ -148,7 +56,6 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
 }
-
 .pulse-dot {
   animation: pulse-dot 2s ease-in-out infinite;
 }

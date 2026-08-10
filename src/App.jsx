@@ -13,12 +13,11 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/create-account" element={<CreateAccount />} />
-      <Route path="/terminal" element={<TerminalPage />} />
-      <Route path="/markets" element={<MarketsPage />} />
       <Route path="/broker" element={<BrokerPortal />} />
+      <Route path="/portfolio" element={<Portfolio />} />
+      <Route path="/wallet" element={<Wallet />} />
+      <Route path="/ai" element={<AIInsights />} />
       <Route path="/admin" element={<AdminConsole />} />
-      
     </Routes>
   )
 }

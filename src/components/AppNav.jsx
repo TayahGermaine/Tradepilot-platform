@@ -1,17 +1,17 @@
 import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { BellIcon, ChevronDown, MenuIcon, CloseIcon } from './Icons.jsx'
 import { currentUser } from '../data/mockData.js'
 
 const navLinks = [
-  { label: 'Terminal', to: '/terminal' },
-  { label: 'Markets', to: '/markets' },
-  { label: 'Analysis', to: '/broker' },
-  { label: 'News', to: '/broker' },
-  { label: 'Portfolio', to: '/broker' },
-  { label: 'Wallet', to: '/broker' },
-  { label: 'AI Insights', to: '/terminal' },
+  { label: 'Terminal' },
+  { label: 'Markets' },
+  { label: 'Analysis' },
+  { label: 'News', to: '/news' },
+  { label: 'Portfolio', to: '/portfolio' },
+  { label: 'Wallet', to: '/wallet' },
+  { label: 'AI Insights', to: '/ai' },
 ]
 
 const portalLinks = [
@@ -22,7 +22,6 @@ const portalLinks = [
 
 export default function AppNav() {
   const location = useLocation()
-  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
   return (
@@ -31,15 +30,17 @@ export default function AppNav() {
         <Logo to="/" />
 
         <nav className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <button
-              key={link.label}
-              onClick={() => navigate(link.to)}
-              className={location.pathname === link.to ? 'btn-ghost text-white' : 'btn-ghost'}
-            >
-              {link.label}
-            </button>
-          ))}
+          {navLinks.map((link) =>
+            link.to ? (
+              <Link key={link.label} to={link.to} className="btn-ghost">
+                {link.label}
+              </Link>
+            ) : (
+              <button key={link.label} className="btn-ghost">
+                {link.label}
+              </button>
+            )
+          )}
         </nav>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
@@ -93,18 +94,21 @@ export default function AppNav() {
       {open && (
         <div className="lg:hidden border-t border-base-border bg-base-950 px-4 py-3">
           <div className="flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <button
-                key={link.label}
-                onClick={() => {
-                  navigate(link.to)
-                  setOpen(false)
-                }}
-                className="text-left rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-white/5"
-              >
-                {link.label}
-              </button>
-            ))}
+            {navLinks.map((link) =>
+              link.to ? (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  className="text-left rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-white/5"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <button key={link.label} className="text-left rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-white/5">
+                  {link.label}
+                </button>
+              )
+            )}
           </div>
           <div className="mt-3 flex flex-col gap-1 border-t border-base-border pt-3">
             {portalLinks.map((p) => (

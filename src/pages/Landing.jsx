@@ -12,7 +12,7 @@ export default function Landing() {
           <Link to="/login" className="btn-outline hidden sm:inline-flex">
             LOG IN
           </Link>
-          <Link to="/create-account" className="btn-primary">
+          <Link to="/login" className="btn-primary">
             CREATE ACCOUNT
           </Link>
         </div>
@@ -37,13 +37,11 @@ export default function Landing() {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link to="/terminal" className="btn-primary px-6 py-3 text-sm">
+            <Link to="/login" className="btn-primary px-6 py-3 text-sm">
               ENTER TERMINAL
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link to="/markets" className="btn-outline px-6 py-3 text-sm">
-              VIEW LIVE MARKETS
-            </Link>
+            <button className="btn-outline px-6 py-3 text-sm">VIEW LIVE MARKETS</button>
           </div>
         </div>
 
