@@ -5,9 +5,9 @@ import { BellIcon, ChevronDown, MenuIcon, CloseIcon } from './Icons.jsx'
 import { currentUser } from '../data/mockData.js'
 
 const navLinks = [
-  { label: 'Terminal' },
-  { label: 'Markets' },
-  { label: 'Analysis' },
+  { label: 'Terminal', to: '/terminal' },
+  { label: 'Markets', to: '/markets' },
+  { label: 'Analysis', to: '/analysis' },
   { label: 'News', to: '/news' },
   { label: 'Portfolio', to: '/portfolio' },
   { label: 'Wallet', to: '/wallet' },

@@ -26,6 +26,8 @@ const statusStyles = {
   High: 'bg-down/10 text-down border border-down/20',
   Client: 'bg-white/5 text-slate-300 border border-base-border',
   Broker: 'bg-accent/10 text-accent border border-accent/20',
+  Ready: 'bg-up/10 text-up border border-up/20',
+  Running: 'bg-accent/10 text-accent border border-accent/20',
 }
 
 export function StatusPill({ children }) {
