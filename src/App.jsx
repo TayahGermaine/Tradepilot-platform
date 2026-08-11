@@ -26,7 +26,6 @@ export default function App() {
       <Route path="/terminal" element={<TerminalPage />} />
       <Route path="/markets" element={<MarketsPage />} />
       <Route path="/createaccount" element={<CreateAccount />} />
-      <Route path="/news" element={<NewsPage />} />
       <Route path="/analysis" element={<AnalysisPage />} />
     </Routes>
   )
