@@ -133,7 +133,7 @@ export default function Login() {
 
           <p className="mt-6 text-sm text-slate-500">
             New here?{' '}
-            <button onClick={() => navigate('/broker')} className="font-medium text-warn hover:brightness-110">
+            <button type="button" onClick={() => navigate('/createaccount')} className="font-medium text-warn hover:brightness-110">
               Create an account
             </button>
           </p>

@@ -9,6 +9,7 @@ import Portfolio from './pages/Portfolio.jsx'
 import Wallet from './pages/Wallet.jsx'
 import AIInsights from './pages/AIInsights.jsx'
 import CreateAccount from './pages/Createaccount.jsx'
+import NewsPage from './pages/NewsPage.jsx'
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
       <Route path="/portfolio" element={<Portfolio />} />
       <Route path="/wallet" element={<Wallet />} />
       <Route path="/ai" element={<AIInsights />} />
+      <Route path="/news" element={<NewsPage />} />
       <Route path="/admin" element={<AdminConsole />} />
       <Route path="/terminal" element={<TerminalPage />} />
       <Route path="/markets" element={<MarketsPage />} />
