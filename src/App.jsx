@@ -21,6 +21,7 @@ export default function App() {
       <Route path="/portfolio" element={<Portfolio />} />
       <Route path="/wallet" element={<Wallet />} />
       <Route path="/ai" element={<AIInsights />} />
+      <Route path="/news" element={<NewsPage />} />
       <Route path="/admin" element={<AdminConsole />} />
       <Route path="/terminal" element={<TerminalPage />} />
       <Route path="/markets" element={<MarketsPage />} />

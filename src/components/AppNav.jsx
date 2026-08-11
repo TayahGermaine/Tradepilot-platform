@@ -8,6 +8,7 @@ const navLinks = [
   { label: 'Terminal', to: '/terminal' },
   { label: 'Markets', to: '/markets' },
   { label: 'Analysis', to: '/analysis' },
+  { label: 'Analysis', to: '/ai' },
   { label: 'News', to: '/news' },
   { label: 'Portfolio', to: '/portfolio' },
   { label: 'Wallet', to: '/wallet' },
@@ -30,17 +31,11 @@ export default function AppNav() {
         <Logo to="/" />
 
         <nav className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) =>
-            link.to ? (
-              <Link key={link.label} to={link.to} className="btn-ghost">
-                {link.label}
-              </Link>
-            ) : (
-              <button key={link.label} className="btn-ghost">
-                {link.label}
-              </button>
-            )
-          )}
+          {navLinks.map((link) => (
+            <Link key={link.label} to={link.to} className="btn-ghost">
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
@@ -94,21 +89,15 @@ export default function AppNav() {
       {open && (
         <div className="lg:hidden border-t border-base-border bg-base-950 px-4 py-3">
           <div className="flex flex-col gap-1">
-            {navLinks.map((link) =>
-              link.to ? (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  className="text-left rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-white/5"
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <button key={link.label} className="text-left rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-white/5">
-                  {link.label}
-                </button>
-              )
-            )}
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                to={link.to}
+                className="text-left rounded-md px-3 py-2 text-sm text-slate-300 hover:bg-white/5"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
           <div className="mt-3 flex flex-col gap-1 border-t border-base-border pt-3">
             {portalLinks.map((p) => (
