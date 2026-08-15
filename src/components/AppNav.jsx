@@ -15,7 +15,7 @@ const navLinks = [
 ]
 
 const portalLinks = [
-  { label: 'Client Portal', to: '/terminal' },
+  { label: 'Client Portal', to: '/login' },
   { label: 'Broker Portal', to: '/broker' },
   { label: 'Admin Console', to: '/admin' },
 ]
