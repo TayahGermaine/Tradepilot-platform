@@ -8,7 +8,6 @@ const navLinks = [
   { label: 'Terminal', to: '/terminal' },
   { label: 'Markets', to: '/markets' },
   { label: 'Analysis', to: '/analysis' },
-  { label: 'Analysis', to: '/ai' },
   { label: 'News', to: '/news' },
   { label: 'Portfolio', to: '/portfolio' },
   { label: 'Wallet', to: '/wallet' },
