@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Logo from './Logo.jsx'
-import { BellIcon, ChevronDown, MenuIcon, CloseIcon } from './Icons.jsx'
-import { currentUser } from '../data/mockData.js'
+import { ChevronDown, MenuIcon, CloseIcon, ShieldIcon } from './Icons.jsx'
+import NotificationBell from './NotificationBell.jsx'
+import { useAuth, getRoleDashboard } from '../hooks/useAuth.jsx'
 
 const navLinks = [
   { label: 'Terminal', to: '/terminal' },
@@ -11,18 +12,31 @@ const navLinks = [
   { label: 'News', to: '/news' },
   { label: 'Portfolio', to: '/portfolio' },
   { label: 'Wallet', to: '/wallet' },
-  { label: 'AI Insights', to: '/ai' },
+  { label: 'AI Console', to: '/ai' },
+  { label: 'KYC', to: '/kyc' },
 ]
 
 const portalLinks = [
-  { label: 'Client Portal', to: '/login' },
-  { label: 'Broker Portal', to: '/broker' },
-  { label: 'Admin Console', to: '/admin' },
+  { label: 'Client', to: '/dashboard' },
+  { label: 'Broker', to: '/broker' },
+  { label: 'Admin', to: '/admin' },
 ]
 
 export default function AppNav() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { user, logout } = useAuth()
   const [open, setOpen] = useState(false)
+
+  const initials = user?.name?.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase() || '?'
+  const displayName = user?.name || 'Guest'
+  const displayRole = user ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Not signed in'
+  const dashboardPath = user ? getRoleDashboard(user.role) : '/login'
+
+  function handleLogout() {
+    logout()
+    navigate('/login')
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-base-border bg-base-950/90 backdrop-blur">
@@ -59,22 +73,38 @@ export default function AppNav() {
             ))}
           </div>
 
-          <button className="relative hidden sm:flex h-9 w-9 items-center justify-center rounded-lg border border-base-border text-slate-400 hover:text-white hover:border-slate-500">
-            <BellIcon className="h-4 w-4" />
-            <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-down ring-2 ring-base-950" />
-          </button>
+          <Link
+            to="/kyc"
+            className="hidden sm:flex items-center gap-1.5 rounded-lg border border-warn/20 bg-warn/10 px-3 py-1.5 text-xs font-semibold text-warn hover:bg-warn/15 transition-colors"
+          >
+            <ShieldIcon className="h-3.5 w-3.5" />
+            VERIFY KYC
+          </Link>
 
-          <button className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 hover:bg-white/5">
-            <img src={currentUser.avatar} alt={currentUser.name} className="h-8 w-8 rounded-full object-cover" />
+          <NotificationBell />
+
+          <Link to={dashboardPath} className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 hover:bg-white/5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/20 border border-accent/30 text-sm font-bold text-accent">
+              {initials}
+            </span>
             <span className="hidden sm:block text-left leading-tight">
-              <span className="block text-sm font-semibold text-white">{currentUser.name}</span>
+              <span className="block text-sm font-semibold text-white">{displayName}</span>
               <span className="flex items-center gap-1 text-[11px] text-up">
                 <span className="h-1.5 w-1.5 rounded-full bg-up" />
-                {currentUser.role} · 2FA Active
+                {displayRole} · 2FA Active
               </span>
             </span>
             <ChevronDown className="hidden sm:block h-3.5 w-3.5 text-slate-500" />
-          </button>
+          </Link>
+
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="hidden sm:flex items-center rounded-lg border border-base-600 px-3 py-1.5 text-xs font-semibold text-slate-400 hover:text-down hover:border-down/30 transition-colors"
+            >
+              LOG OUT
+            </button>
+          )}
 
           <button
             onClick={() => setOpen((v) => !v)}
@@ -99,11 +129,19 @@ export default function AppNav() {
             ))}
           </div>
           <div className="mt-3 flex flex-col gap-1 border-t border-base-border pt-3">
+            <Link to="/kyc" className="rounded-md px-3 py-2 text-sm font-semibold text-warn hover:bg-white/5">
+              Verify KYC
+            </Link>
             {portalLinks.map((p) => (
               <Link key={p.to} to={p.to} className="rounded-md px-3 py-2 text-sm font-medium text-slate-300 hover:bg-white/5">
                 {p.label}
               </Link>
             ))}
+            {user && (
+              <button onClick={handleLogout} className="text-left rounded-md px-3 py-2 text-sm font-semibold text-down hover:bg-white/5">
+                Log out
+              </button>
+            )}
           </div>
         </div>
       )}
