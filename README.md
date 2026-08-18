@@ -1,4 +1,4 @@
-# QuantumX
+# TradePilot
 
 A React (Vite) + Tailwind CSS front-end clone of the QuantumX crypto-terminal UI:
 marketing landing page, login screen, broker portal, and admin console — fully
