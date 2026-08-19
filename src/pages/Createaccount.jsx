@@ -1,28 +1,63 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Logo from '../components/Logo.jsx'
+import { useAuth, getRoleDashboard } from '../hooks/useAuth.jsx'
+
+const SIGNUP_ROLES = [
+  { id: 'client', label: 'Client', description: 'Trade, manage portfolio and wallet' },
+  { id: 'broker', label: 'Broker', description: 'Manage client book and approve requests' },
+]
 
 export default function CreateAccount() {
   const navigate = useNavigate()
+  const { register } = useAuth()
+  const [role, setRole] = useState('client')
   const [form, setForm] = useState({
     fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   function handleChange(e) {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
+    setError(null)
+
     if (form.password !== form.confirmPassword) {
-      alert('Passwords do not match')
+      setError('Passwords do not match')
       return
     }
-    navigate('/login')
+    if (form.password.length < 8) {
+      setError('Password must be at least 8 characters')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const result = await register({
+        fullName: form.fullName,
+        email: form.email,
+        password: form.password,
+        role,
+      })
+
+      if (result.token && result.user) {
+        navigate(getRoleDashboard(result.user.role))
+      } else {
+        navigate('/login')
+      }
+    } catch (err) {
+      setError(err.message || 'Registration failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -54,10 +89,42 @@ export default function CreateAccount() {
                   <li>• Secure sign-in with broker-ready workflows</li>
                 </ul>
               </div>
+
+              <div className="mt-4 rounded-2xl border border-warn/20 bg-warn/5 p-4">
+                <p className="text-sm font-semibold text-warn">Admin accounts</p>
+                <p className="mt-1 text-sm text-slate-400">
+                  Admin access is restricted and cannot be created through signup. Contact your platform operator for admin credentials.
+                </p>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="card p-6 sm:p-7">
               <div className="space-y-4">
+                <div>
+                  <label className="label-eyebrow">Account type</label>
+                  <div className="mt-1.5 grid grid-cols-2 gap-2">
+                    {SIGNUP_ROLES.map((r) => (
+                      <button
+                        key={r.id}
+                        type="button"
+                        onClick={() => { setRole(r.id); setError(null) }}
+                        className={`rounded-lg border px-3 py-3 text-left transition-colors ${
+                          role === r.id
+                            ? 'border-accent bg-accent/10'
+                            : 'border-base-border hover:border-slate-500'
+                        }`}
+                      >
+                        <span className={`block text-sm font-bold ${role === r.id ? 'text-accent' : 'text-slate-300'}`}>
+                          {r.label}
+                        </span>
+                        <span className="mt-0.5 block text-[11px] leading-tight text-slate-500">
+                          {r.description}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div>
                   <label className="label-eyebrow">Full name</label>
                   <input
@@ -91,8 +158,9 @@ export default function CreateAccount() {
                     value={form.password}
                     onChange={handleChange}
                     className="input-field mt-1.5"
-                    placeholder="••••••••"
+                    placeholder="At least 8 characters"
                     required
+                    minLength="8"
                   />
                 </div>
 
@@ -110,8 +178,14 @@ export default function CreateAccount() {
                 </div>
               </div>
 
-              <button type="submit" className="btn-primary mt-6 w-full py-3">
-                CREATE ACCOUNT
+              {error && (
+                <div className="mt-4 rounded-lg border border-down/20 bg-down/10 px-4 py-3 text-sm text-down">
+                  {error}
+                </div>
+              )}
+
+              <button type="submit" disabled={loading} className="btn-primary mt-6 w-full py-3 disabled:opacity-60">
+                {loading ? 'CREATING ACCOUNT…' : `CREATE ${role.toUpperCase()} ACCOUNT`}
               </button>
             </form>
           </div>
