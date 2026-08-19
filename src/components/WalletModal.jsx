@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CloseIcon } from './Icons.jsx'
 import { useNotifications } from '../hooks/useNotifications.jsx'
+import { clientApi } from '../services/clientApi.js'
 
 export default function WalletModal({ open, onClose, mode = 'deposit', balance }) {
   const { push } = useNotifications()
@@ -8,23 +9,38 @@ export default function WalletModal({ open, onClose, mode = 'deposit', balance }
   const [amount, setAmount] = useState('')
   const [address, setAddress] = useState('')
   const [done, setDone] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState(null)
 
   if (!open) return null
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    setDone(true)
-    push(
-      `${mode === 'deposit' ? 'Deposit' : 'Withdrawal'} initiated`,
-      `${amount} ${asset}${mode === 'withdraw' ? ` to ${address.slice(0, 8)}…${address.slice(-6)}` : ''}`,
-      mode === 'deposit' ? 'up' : 'warn'
-    )
-    setTimeout(() => {
-      setDone(false)
-      setAmount('')
-      setAddress('')
-      onClose()
-    }, 1500)
+    setError(null)
+    setSubmitting(true)
+    try {
+      if (mode === 'deposit') {
+        await clientApi.requestDeposit({ asset, amount: parseFloat(amount) })
+      } else {
+        await clientApi.requestWithdrawal({ asset, amount: parseFloat(amount), address })
+      }
+      setDone(true)
+      push(
+        `${mode === 'deposit' ? 'Deposit' : 'Withdrawal'} initiated`,
+        `${amount} ${asset}${mode === 'withdraw' ? ` to ${address.slice(0, 8)}…${address.slice(-6)}` : ''}`,
+        mode === 'deposit' ? 'up' : 'warn'
+      )
+      setTimeout(() => {
+        setDone(false)
+        setAmount('')
+        setAddress('')
+        onClose()
+      }, 1500)
+    } catch (err) {
+      setError(err.message || `Failed to ${mode === 'deposit' ? 'process deposit' : 'request withdrawal'}`)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -93,12 +109,16 @@ export default function WalletModal({ open, onClose, mode = 'deposit', balance }
             </div>
           )}
 
+          {error && (
+            <p className="text-sm text-down">{error}</p>
+          )}
+
           <button
             type="submit"
-            disabled={done}
+            disabled={done || submitting}
             className={`btn-primary w-full py-3 disabled:opacity-60 ${mode === 'withdraw' ? '!bg-warn !text-base-950' : ''}`}
           >
-            {done ? 'Submitted' : `${mode === 'deposit' ? 'Confirm deposit' : 'Request withdrawal'}`}
+            {done ? 'Submitted' : submitting ? 'Submitting…' : `${mode === 'deposit' ? 'Confirm deposit' : 'Request withdrawal'}`}
           </button>
         </form>
       </div>

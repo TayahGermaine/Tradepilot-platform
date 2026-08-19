@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import AppNav from '../components/AppNav.jsx'
 import { useNotifications } from '../hooks/useNotifications.jsx'
 import { ShieldIcon, EyeIcon, EyeOffIcon } from '../components/Icons.jsx'
+import { clientApi } from '../services/clientApi.js'
 
 const steps = [
   { id: 0, label: 'Personal info' },
@@ -26,6 +27,8 @@ export default function KYC() {
   const [docUploaded, setDocUploaded] = useState(false)
   const [selfieUploaded, setSelfieUploaded] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState(null)
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -39,10 +42,23 @@ export default function KYC() {
     if (step > 0) setStep(step - 1)
   }
 
-  function finish() {
-    setSubmitted(true)
-    push('KYC submitted', 'Your identity verification is under review.', 'up')
-    setTimeout(() => navigate('/terminal'), 2200)
+  async function finish() {
+    setError(null)
+    setSubmitting(true)
+    try {
+      await clientApi.submitKyc({
+        ...form,
+        docUploaded,
+        selfieUploaded,
+      })
+      setSubmitted(true)
+      push('KYC submitted', 'Your identity verification is under review.', 'up')
+      setTimeout(() => navigate('/terminal'), 2200)
+    } catch (err) {
+      setError(err.message || 'Failed to submit verification')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const canProceed =
@@ -214,11 +230,14 @@ export default function KYC() {
                   Continue
                 </button>
               ) : (
-                <button onClick={finish} className="btn-primary">
-                  Submit verification
+                <button onClick={finish} disabled={submitting} className="btn-primary disabled:opacity-60">
+                  {submitting ? 'Submitting…' : 'Submit verification'}
                 </button>
               )}
             </div>
+          )}
+          {error && !submitted && (
+            <p className="mt-4 text-sm text-down">{error}</p>
           )}
         </div>
       </main>

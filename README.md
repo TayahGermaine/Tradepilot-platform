@@ -25,6 +25,14 @@ npm run preview
 
 The production build is written to `dist/`.
 
+## Backend
+
+A MongoDB-backed API server lives in [`backend/`](./backend) and implements
+every endpoint used by `src/services/*.js`. See `backend/README.md` for setup
+— once it's running, copy `.env.example` to `.env` in this project root
+(already set to `VITE_API_BASE_URL=http://localhost:4000/api`) and the app
+will use real data instead of mock data.
+
 ## Pages / routes
 
 | Route     | Page                                              |

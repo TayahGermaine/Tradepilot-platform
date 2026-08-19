@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CloseIcon } from './Icons.jsx'
 import { useNotifications } from '../hooks/useNotifications.jsx'
 import { formatPrice } from '../hooks/useLiveMarkets.js'
+import { clientApi } from '../services/clientApi.js'
 
 export default function OrderModal({ open, onClose, market }) {
   const { push } = useNotifications()
@@ -10,26 +11,43 @@ export default function OrderModal({ open, onClose, market }) {
   const [size, setSize] = useState('')
   const [price, setPrice] = useState('')
   const [placed, setPlaced] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState(null)
 
   if (!open) return null
 
   const ref = market?.pair || '—'
   const currentPrice = market?.price || 0
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    setPlaced(true)
-    push(
-      `${side === 'buy' ? 'Buy' : 'Sell'} order placed`,
-      `${size || '0'} ${ref.split('/')[0]} @ ${orderType === 'market' ? formatPrice(currentPrice) : price || formatPrice(currentPrice)}`,
-      side === 'buy' ? 'up' : 'warn'
-    )
-    setTimeout(() => {
-      setPlaced(false)
-      setSize('')
-      setPrice('')
-      onClose()
-    }, 1500)
+    setError(null)
+    setSubmitting(true)
+    try {
+      await clientApi.placeOrder({
+        pair: ref,
+        side,
+        type: orderType,
+        size: parseFloat(size || '0'),
+        price: orderType === 'market' ? undefined : parseFloat(price || currentPrice),
+      })
+      setPlaced(true)
+      push(
+        `${side === 'buy' ? 'Buy' : 'Sell'} order placed`,
+        `${size || '0'} ${ref.split('/')[0]} @ ${orderType === 'market' ? formatPrice(currentPrice) : price || formatPrice(currentPrice)}`,
+        side === 'buy' ? 'up' : 'warn'
+      )
+      setTimeout(() => {
+        setPlaced(false)
+        setSize('')
+        setPrice('')
+        onClose()
+      }, 1500)
+    } catch (err) {
+      setError(err.message || 'Failed to place order')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -125,14 +143,18 @@ export default function OrderModal({ open, onClose, market }) {
             </div>
           </div>
 
+          {error && (
+            <p className="text-sm text-down">{error}</p>
+          )}
+
           <button
             type="submit"
-            disabled={placed}
+            disabled={placed || submitting}
             className={`w-full rounded-lg py-3 text-sm font-bold transition-colors disabled:opacity-60 ${
               side === 'buy' ? 'bg-up text-base-950 hover:brightness-110' : 'bg-down text-white hover:brightness-110'
             }`}
           >
-            {placed ? 'Order placed' : `${side === 'buy' ? 'BUY' : 'SELL'} ${ref.split('/')[0]}`}
+            {placed ? 'Order placed' : submitting ? 'Placing order…' : `${side === 'buy' ? 'BUY' : 'SELL'} ${ref.split('/')[0]}`}
           </button>
         </form>
       </div>
